@@ -6,7 +6,10 @@ Login API
 Details API
 
 #Getting Started
-Step 1: setup database in .env file
+##Step 1: setup database in .env file
 DB_DATABASE=youtube
 DB_USERNAME=root
 DB_PASSWORD= rashed@123
+ 
+##Step 2:Install Laravel Sanctum.
+composer require laravel/sanctum
