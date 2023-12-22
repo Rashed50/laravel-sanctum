@@ -10,12 +10,46 @@ Details API
 
 ## Step 1: setup database in .env file
 
-DB_DATABASE=sacdb
-
-DB_USERNAME=root
-
+DB_DATABASE=sacdb 
+DB_USERNAME=root  
 DB_PASSWORD= rashed@123
  
 ## Step 2:Install Laravel Sanctum.
 
 composer require laravel/sanctum
+
+# Step 3:Publish the Sanctum configuration and migration files
+
+php artisan vendor:publish --provider="Laravel\Sanctum\SanctumServiceProvider"
+
+# Step 4:Run your database migrations.
+
+php artisan migrate
+
+# Step 5:Add the Sanctum's middleware.
+
+'''
+../app/Http/Kernel.php
+
+use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
+
+...
+
+    protected $middlewareGroups = [
+        ...
+
+        'api' => [
+            EnsureFrontendRequestsAreStateful::class,
+            'throttle:60,1',
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        ],
+    ];
+
+    ...
+],
+'''
+
+
+
+
+
