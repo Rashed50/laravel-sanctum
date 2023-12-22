@@ -49,6 +49,89 @@ use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
     ];
 ],
 '''
+# Step 6:To use tokens for users.
+
+use Laravel\Sanctum\HasApiTokens;
+
+class User extends Authenticatable
+{
+    use HasApiTokens, Notifiable;
+}
+
+# Step 7:Let's create the seeder for the User model
+
+php artisan make:seeder UsersTableSeeder
+
+# Step 8:Now let's insert as record
+
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+...
+...
+DB::table('users')->insert([
+    'name' => 'John Doe',
+    'email' => 'john@doe.com',
+    'password' => Hash::make('password')
+]);
+# Step 9:To seed users table with user
+
+php artisan db:seed --class=UsersTableSeeder
+
+# Step 10: create a controller nad /login route in the routes/api.php file:
+
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\User;
+use Illuminate\Support\Facades\Hash;
+class UserController extends Controller
+{
+    // 
+
+    function index(Request $request)
+    {
+        $user= User::where('email', $request->email)->first();
+        // print_r($data);
+            if (!$user || !Hash::check($request->password, $user->password)) {
+                return response([
+                    'message' => ['These credentials do not match our records.']
+                ], 404);
+            }
+        
+             $token = $user->createToken('my-app-token')->plainTextToken;
+        
+            $response = [
+                'user' => $user,
+                'token' => $token
+            ];
+        
+             return response($response, 201);
+    }
+}
+# Step 11: Test with postman, Result will be below
+
+{
+    "user": {
+        "id": 1,
+        "name": "John Doe",
+        "email": "john@doe.com",
+        "email_verified_at": null,
+        "created_at": null,
+        "updated_at": null
+    },
+    "token": "AbQzDgXa..."
+}
+# Step 11: Make Details API or any other with secure route
+
+Route::group(['middleware' => 'auth:sanctum'], function(){
+    //All secure URL's
+
+    });
+
+Route::post("login",[UserController::class,'index']);
+
 
 
 
