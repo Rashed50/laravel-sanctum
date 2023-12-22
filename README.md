@@ -113,6 +113,7 @@ class UserController extends Controller
 }
 # Step 11: Test with postman, Result will be below
 
+'''
 {
     "user": {
         "id": 1,
@@ -124,13 +125,14 @@ class UserController extends Controller
     },
     "token": "AbQzDgXa..."
 }
+'''
+
 # Step 11: Make Details API or any other with secure route
 
 Route::group(['middleware' => 'auth:sanctum'], function(){
     //All secure URL's
 
     });
-
 Route::post("login",[UserController::class,'index']);
 
 
